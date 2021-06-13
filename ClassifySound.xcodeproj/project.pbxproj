@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4436EC532675ACD90062E52E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4436EC522675ACD90062E52E /* ViewController.swift */; };
+		4436EC552675B2CE0062E52E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4436EC542675B2CE0062E52E /* ViewController.swift */; };
 		44CBED2E26702C8A00D683EE /* Quips.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CBED2D26702C8A00D683EE /* Quips.swift */; };
 		44CBED302670398600D683EE /* cameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CBED2F2670398600D683EE /* cameraViewController.swift */; };
 		44CBED342671136C00D683EE /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CBED332671136C00D683EE /* ImagePicker.swift */; };
@@ -24,7 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4436EC522675ACD90062E52E /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		4436EC542675B2CE0062E52E /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		44CBED2D26702C8A00D683EE /* Quips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quips.swift; sourceTree = "<group>"; };
 		44CBED2F2670398600D683EE /* cameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cameraViewController.swift; sourceTree = "<group>"; };
 		44CBED332671136C00D683EE /* ImagePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
@@ -124,7 +124,7 @@
 				44CBED2D26702C8A00D683EE /* Quips.swift */,
 				C799A66E263BBBB4000E6127 /* SetupMonitoredSoundsView.swift */,
 				44CBED2F2670398600D683EE /* cameraViewController.swift */,
-				4436EC522675ACD90062E52E /* ViewController.swift */,
+				4436EC542675B2CE0062E52E /* ViewController.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -206,7 +206,7 @@
 				C799A67B263F9FCD000E6127 /* DetectSoundsView.swift in Sources */,
 				C799A672263BBBB4000E6127 /* SetupMonitoredSoundsView.swift in Sources */,
 				C799A677263F97CB000E6127 /* SoundIdentifier.swift in Sources */,
-				4436EC532675ACD90062E52E /* ViewController.swift in Sources */,
+				4436EC552675B2CE0062E52E /* ViewController.swift in Sources */,
 				C799A670263BBBB4000E6127 /* ClassifySoundApp.swift in Sources */,
 				44CBED342671136C00D683EE /* ImagePicker.swift in Sources */,
 				44CBED302670398600D683EE /* cameraViewController.swift in Sources */,

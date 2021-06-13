@@ -21,12 +21,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .green
+        view.backgroundColor = .clear
        askForPermissions()
+        view.layer.addSublayer(previewLayer)
   }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        view.backgroundColor = .clear
+        previewLayer.frame = view.bounds
     }
     
     

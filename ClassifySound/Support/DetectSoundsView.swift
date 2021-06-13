@@ -116,7 +116,7 @@ static func generateDetectionsGrid(_ detections: [(SoundIdentifier, DetectionSta
         VStack {
             ZStack {
                 VStack {
-                    Text("Dog Translation In Progress").font(.title).padding()
+                   // Text("Dog Translation In Progress").font(.title).padding()
                   //  (image ?? Image("egg")).resizable()
                        // .scaledToFit()
                     VideoComponent()
@@ -126,7 +126,7 @@ static func generateDetectionsGrid(_ detections: [(SoundIdentifier, DetectionSta
                     .disabled(!state.soundDetectionIsRunning)
                 }
         }.padding([.horizontal, .bottom])
-            .navigationBarTitle("Instafilter").sheet(isPresented: $showingImagePicker, onDismiss: loadImage) {
+            .navigationBarTitle("Dog Translator").sheet(isPresented: $showingImagePicker, onDismiss: loadImage) {
                 ImagePicker(image: self.$inputImage)
         }
     }
