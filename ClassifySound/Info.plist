@@ -4,6 +4,8 @@
 <dict>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>...</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This application would like access to the microphone to detect and display sounds occurring in the environment.</string>
 </dict>

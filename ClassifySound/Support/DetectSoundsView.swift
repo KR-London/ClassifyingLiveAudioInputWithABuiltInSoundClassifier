@@ -9,46 +9,26 @@ from the audio input.
 import Foundation
 import SwiftUI
 
+var dogConfidence = 0.0
+var latestQuip = ""
+var thinking = ""
+
 ///  Provides a visualization the app uses when detecting sounds.
 struct DetectSoundsView: View {
     /// The runtime state that contains information about the strength of the detected sounds.
     @ObservedObject var state: AppState
-
-    /// The configuration that dictates aspects of sound classification, as well as aspects of the visualization.
+    
+    @State private var image: Image?
+    @State private var filterIntensity = 0.5
+    
+    @State private var showingImagePicker = true
+    @State private var inputImage: UIImage?
+        /// The configuration that dictates aspects of sound classification, as well as aspects of the visualization.
     @Binding var config: AppConfiguration
 
-    /// An action to perform when the user requests to edit the app's configuration.
-    let configureAction: () -> Void
-
-    /// Generates an array of colors for the bars in a confidence meter.
-    ///
-    /// Confidence meters resemble the bars of an equalizer. Bars illuminate as the confidence increases.
-    /// The color of the bars provides a visual indicator of whether the confidence in a label is low, medium, or high.
-    ///
-    /// - Parameter numBars: The total number of bars to draw in the confidence meter.
-    ///
-    /// - Returns: An array of colors that contains elements equal to the provided `numBars` argument.
-    ///   Each color denotes the color of a single bar within a confidence meter. Bars represent evenly spaced
-    ///   confidence scores. The last bar represents a score of 1.0. If there are N bars, the spacing between
-    ///   bars is (1.0 / N).
-    static func generateConfidenceMeterBarColors(numBars: Int) -> [Color] {
-        let numGreenBars = Int(Double(numBars) / 3.0)
-        let numYellowBars = Int(Double(numBars) * 2 / 3.0) - numGreenBars
-        let numRedBars = Int(numBars - numYellowBars)
-
-        return [Color](repeating: .green, count: numGreenBars) +
-          [Color](repeating: .yellow, count: numYellowBars) +
-          [Color](repeating: .red, count: numRedBars)
-    }
-
-    /// Frames the view within a fixed-size colored plate background.
-    ///
-    /// - Parameter view: The view to frame within the bounds of a colored plate.
-    ///
-    /// - Returns: The view with a colored plate in its background, clipping the original view to
-    ///   the bounds of the plate.
+ 
     static func cardify<T: View>(view: T) -> some View {
-        let dimensions = (CGFloat(100.0), CGFloat(200.0))
+        let dimensions = (CGFloat(600.0), CGFloat(600.0))
         let cornerRadius = 20.0
         let color = Color.blue
         let opacity = 0.2
@@ -56,113 +36,176 @@ struct DetectSoundsView: View {
         return view
           .frame(width: dimensions.0,
                  height: dimensions.1)
-          .background(
-            RoundedRectangle(cornerRadius: cornerRadius)
-              .foregroundColor(color)
-              .opacity(opacity))
     }
-
-    /// Creates a view that illustrates a confidence score.
-    ///
-    /// - Parameter confidence: The score to reflect in the generated visualization.
-    ///
-    /// - Returns: A view that contains an equalizer-like meter for visualizing a confidence score's strength.
-    static func generateMeter(confidence: Double) -> some View {
-        let numBars = 20
-        let barColors = generateConfidenceMeterBarColors(numBars: numBars)
-        let confidencePerBar = 1.0 / Double(numBars)
-        let barSpacing = CGFloat(2.0)
-        let barDimensions = (CGFloat(15.0), CGFloat(2.0))
-        let numLitBars = Int(confidence / confidencePerBar)
-        let litBarOpacities = [Double](repeating: 1.0, count: numLitBars)
-        let unlitBarOpacities = [Double](repeating: 0.1, count: numBars - numLitBars)
-        let barOpacities = litBarOpacities + unlitBarOpacities
-
-        return VStack(spacing: barSpacing) {
-            ForEach(0..<numBars) {
-                Rectangle()
-                  .foregroundColor(barColors[numBars - 1 - $0])
-                  .opacity(barOpacities[numBars - 1 - $0])
-                  .frame(width: barDimensions.0, height: barDimensions.1)
+    
+    static func generateMeter(detected: String, confidence: Double) -> some View{
+        
+        print(detected)
+        
+        if detected == "Dog" || detected == "Dog Bark" || detected == "Dog Bow Wow" || detected == "Dog Growl"{
+                dogConfidence = confidence
+            if dogConfidence < 0.5{
+                latestQuip = ""
             }
-        }.animation(.easeInOut, value: confidence)
-    }
-
-    /// Creates a view that illustrates a confidence score and label.
-    ///
-    /// - Parameters:
-    ///   - confidence: The score the generated meter reflects.
-    ///   - label: A name to display beneath the meter in the view.
-    ///
-    /// - Returns: A view that contains an equalizer-like meter for visualizing a confidence score's
-    ///   strength, and the name of the sound.
-    static func generateLabeledMeter(confidence: Double, label: String) -> some View {
-        let textHeight = CGFloat(60)
-
-        return VStack {
-            generateMeter(confidence: confidence)
-            Text(label)
-              .lineLimit(nil)
-              .multilineTextAlignment(.center)
-              .frame(height: textHeight)
         }
-    }
-
-    /// Generates a confidence meter that fades in and out over a placeholder.
-    ///
-    /// - Parameters:
-    ///   - confidence: The score the generated meter reflects.
-    ///   - label: A name to display beneath the meter in the view.
-    ///
-    /// - Returns: A view that contains an equalizer-like meter for visualizing a confidence score's
-    ///   strength, and the name of the sound. The app renders the meter over a placeholder background.
-    static func generateMeterCard(confidence: Double,
-                                  label: String) -> some View {
-        return cardify(
-          view: generateLabeledMeter(confidence: confidence,
-                                     label: label))
-    }
-
-    /// Generates a grid of confidence meters that indicate sounds the app detects.
-    ///
-    /// - Parameter detections: A list of sounds that contain their detection states to render. The
-    ///   states indicate whether the sounds appear visible, and if so, the level of confidence to render.
-    ///
-    /// - Returns: A view that contains a grid of confidence meters, indicating which sounds the app
-    ///   detects and how strongly.
-    static func generateDetectionsGrid(_ detections: [(SoundIdentifier, DetectionState)]) -> some View {
-        return ScrollView {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 100, maximum: 100))],
-                      spacing: 2) {
-                ForEach(detections, id: \.0.labelName) {
-                    generateMeterCard(confidence: $0.1.isDetected ? $0.1.currentConfidence : 0.0,
-                                      label: $0.0.displayName)
+        else{
+            
+            if detected != "Dog" && detected != "Dog Bark" && detected != "Dog Bow Wow"  && detected != "Dog Growl"{
+            
+            if confidence > 0.9 && dogConfidence > 0.5{
+                if let script = script[detected] {
+                    latestQuip = script
+                }
+            }
+            else{
+                if confidence > 0.9 {
+                    if let script = script[detected] {
+                        thinking = script
+                    }
+                    print( thinking)
+                }
+                    if dogConfidence > 0.5 {
+                        latestQuip = thinking
+                    }
                 }
             }
         }
-    }
+        return VStack(spacing: 0){
+                                VStack{
+                                    Text(latestQuip)
+                                }
+       }
+   }
+
+static func generateDetectionsGrid(_ detections: [(SoundIdentifier, DetectionState)]) -> some View {
+                return ScrollView {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 600, maximum: 1500))],
+                              spacing: 2) {
+                        ForEach(detections, id: \.0.labelName){
+                            //print($0.0.displayName)
+                            
+                            let confidence = $0.1.currentConfidence
+                            
+//                            if $0.0.displayName == "Dog" {
+//                                print("I hear Dog")
+//                            }
+
+                            //$0.0.displayName = .
+                            
+                            if $0.1.currentConfidence > 0.5 {
+                               
+                                generateMeter(detected: $0.0.displayName, confidence: $0.1.currentConfidence)
+                                
+                        
+                            }
+//                            else if $0.0.displayName == "Dog" || $0.0.displayName  == "Dog Bow Wow" || $0.0.displayName == "Dog Bark" || $0.0.displayName == "Dog Bow Wow" || $0.0.displayName == "Dog Growl"{
+//                                generateMeter(detected: $0.0.displayName, confidence: $0.1.currentConfidence)
+//                            }
+                        }
+                    }
+                }
+            }
+    
+//    func loadImage() {
+//        guard let inputImage = inputImage else { return }
+//        image = Image(uiImage: inputImage)
+//    }
 
     var body: some View {
+        NavigationView {
         VStack {
             ZStack {
                 VStack {
-                    Text("Detecting Sounds").font(.title).padding()
+                    Text("Dog Translation In Progress").font(.title).padding()
+                  //  (image ?? Image("egg")).resizable()
+                       // .scaledToFit()
+                    VideoComponent()
+                    Text( latestQuip)
                     DetectSoundsView.generateDetectionsGrid(state.detectionStates)
                 }.blur(radius: state.soundDetectionIsRunning ? 0.0 : 10.0)
-                 .disabled(!state.soundDetectionIsRunning)
-
-                VStack {
-                    Text("Sound Detection Paused").padding()
-                    Button(action: { state.restartDetection(config: config) }) {
-                        Text("Start")
-                    }
-                }.opacity(state.soundDetectionIsRunning ? 0.0 : 1.0)
-                 .disabled(state.soundDetectionIsRunning)
-            }
-
-            Button(action: configureAction) {
-                Text("Edit Configuration")
-            }.padding()
+                    .disabled(!state.soundDetectionIsRunning)
+                }
+        }.padding([.horizontal, .bottom])
+            .navigationBarTitle("Instafilter").sheet(isPresented: $showingImagePicker, onDismiss: loadImage) {
+                ImagePicker(image: self.$inputImage)
         }
+    }
+    
+  
+        
+}
+    
+    func loadImage() {
+        guard let inputImage = inputImage else { return }
+        image = Image(uiImage: inputImage)
+    }
+
+}
+
+
+//struct CaptureImageView: View {
+//    @Binding var isShown: Bool
+//    @Binding var image: Image?
+//    @Binding var newUIImage: UIImage?
+//
+//    func makeCoordinator() -> Coordinator {
+//        return Coordinator(isShown: $isShown, image: $newUIImage, showSaveButton: $showSaveButton)
+//    }
+//}
+//
+//extension CaptureImageView: UIViewControllerRepresentable {
+//
+//    func makeUIViewController(context: UIViewControllerRepresentableContext<CaptureImageView>) -> UIImagePickerController {
+//
+//        let vc = UIImagePickerController()
+//
+//        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.camera) {
+//            vc.sourceType = .camera
+//            vc.allowsEditing = true
+//         //   vc.delegate = context.coordinator
+//
+//            let screenSize: CGRect = UIScreen.main.bounds
+//            let screenWidth = screenSize.width
+//            let screenHeight = screenSize.height
+//
+//         //   vc.cameraOverlayView = CircleView(frame: CGRect(x: (screenWidth / 2) - 50, y: (screenWidth / 2) + 25, width: 100, height: 100))
+//
+//            return vc
+//        }
+//        return UIImagePickerController()
+//    }
+//
+//    func updateUIViewController(_ uiViewController: UIImagePickerController, context: UIViewControllerRepresentableContext<CaptureImageView>) {
+//    }
+//}
+
+
+struct VideoComponent: UIViewControllerRepresentable {
+    
+    
+    
+    typealias UIViewControllerType =  ViewController
+
+    
+    class Coordinator : NSObject {
+        var parent: VideoComponent
+        
+        init(_ parent:VideoComponent) {
+            self.parent = parent
+        }
+    }
+    
+    func makeUIViewController(context: Context) -> ViewController {
+        let videoViewController = ViewController()
+        return videoViewController
+    }
+    
+    func updateUIViewController(_ uiViewController: ViewController, context: Context) {
+    }
+    
+    
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
     }
 }

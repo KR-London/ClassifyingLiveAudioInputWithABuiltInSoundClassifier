@@ -30,8 +30,8 @@ struct ContentView: View {
                   })
             } else {
                 DetectSoundsView(state: appState,
-                                 config: $appConfig,
-                                 configureAction: { showSetup = true })
+                                 config: $appConfig
+                )
             }
         }
     }
