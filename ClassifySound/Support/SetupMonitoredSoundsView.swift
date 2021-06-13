@@ -110,49 +110,58 @@ struct SetupMonitoredSoundsView: View {
     ///   and dismissing the view.
     var headerContent: some View {
         VStack {
-            HStack {
-                Spacer()
-                Button("Done", action: doneAction).padding()
-            }
-            Text("Select Labels to Detect").font(.title).frame(alignment: .leading)
-            HStack {
-                Button("Select All", action: { selectedSounds.formUnion(soundOptions) }).padding()
-                Button("Clear All", action: { selectedSounds.removeAll() }).padding()
+//            HStack {
+//                Spacer()
+//                Button("Done", action: doneAction).padding()
+//            }
+        //    Text("Select Labels to Detect").font(.title).frame(alignment: .leading)
+            VStack {
+                Button("Dog Translator ", action: { selectedSounds.formUnion(soundOptions)
+                    doneAction()
+                }).padding()
+                Button("Cat Translator ", action: { selectedSounds.formUnion(soundOptions)
+                    doneAction()
+                }).padding()
+                Button("Baby Translator ", action: { selectedSounds.formUnion(soundOptions)
+                    doneAction()
+                }).padding()
+            //    Button("Cat?", action: { selectedSounds.formUnion(soundOptions) }).padding()
+                //Button("Clear All", action: { selectedSounds.removeAll() }).padding()
             }.padding()
-            HStack {
-                Image(systemName: "magnifyingglass")
-                TextField("Search", text: $soundSearchString)
-                Button(action: { soundSearchString = "" }) {
-                    Image(systemName: "x.circle.fill")
-                      .foregroundColor(Color.gray)
-                      .opacity(soundSearchString == "" ? 0.0 : 1.0)
-                }
-            }.padding()
+//            HStack {
+//              //  Image(systemName: "magnifyingglass")
+//             //   TextField("Search", text: $soundSearchString)
+//                Button(action: { soundSearchString = "" }) {
+//                    Image(systemName: "x.circle.fill")
+//                      .foregroundColor(Color.gray)
+//                      .opacity(soundSearchString == "" ? 0.0 : 1.0)
+//                }
+//            }.padding()
         }
     }
 
     /// A view that displays a list of sounds the system detects.
     ///
     /// - Returns: A view that contains the available sounds with their selection status.
-    var soundOptionsList: some View {
-        List {
-            ForEach(displayedSoundOptions, id: \.0) { classAndSelectionStatus in
-                Button(action: { SetupMonitoredSoundsView.toggleMembership(member: classAndSelectionStatus.0, set: &selectedSounds) }) {
-                    HStack {
-                        Image(systemName: selectedSounds.contains(classAndSelectionStatus.0) ? "checkmark.circle.fill" : "circle")
-                          .foregroundColor(Color.blue)
-                        Text(classAndSelectionStatus.0.displayName).frame(alignment: .leading)
-                    }
-                }
-            }
-        }
-    }
+  //  var soundOptionsList: some View {
+//        List {
+//            ForEach(displayedSoundOptions, id: \.0) { classAndSelectionStatus in
+//                Button(action: { SetupMonitoredSoundsView.toggleMembership(member: classAndSelectionStatus.0, set: &selectedSounds) }) {
+//                   // HStack {
+//                      //  Image(systemName: selectedSounds.contains(classAndSelectionStatus.0) ? "checkmark.circle.fill" : "circle")
+//                      //    .foregroundColor(Color.blue)
+//                      //  Text(classAndSelectionStatus.0.displayName).frame(alignment: .leading)
+//                   // }
+//                }
+//            }
+//        }
+  //  }
 
     var body: some View {
         ZStack {
             VStack {
                 headerContent
-                soundOptionsList
+             //   soundOptionsList
             }.blur(radius: querySoundsErrorMessage == nil ? 0.0 : 10.0)
              .disabled(querySoundsErrorMessage != nil)
 

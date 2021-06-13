@@ -37,7 +37,7 @@ struct ContentView: View {
                 
                 
                 
-         //   appConfig.monitoredSounds = getListOfSounds()
+           //     appConfig.monitoredSounds = SoundIdentifier.
             
                 DetectSoundsView(state: appState,
                                  config: $appConfig
