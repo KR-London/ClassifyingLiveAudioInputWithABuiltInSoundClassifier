@@ -11,8 +11,9 @@ import SwiftUI
 
 var dogConfidence = 0.0
 var latestQuip = ""
-var subtitle = "subtitle"
+var subtitle = ""
 var thinking = [""]
+var hearing = [""]
 var dog = false
 
 ///  Provides a visualization the app uses when detecting sounds.
@@ -48,22 +49,7 @@ struct DetectSoundsView: View {
         print(detected)
         
         if detected == "Dog" || detected == "Dog Bark" || detected == "Dog Bow Wow" || detected == "Dog Growl"{
-//            dogConfidence = confidence
-//            print("dog confidence = \(confidence)")
-//            if dogConfidence < 0.5{
-//                latestQuip = ""
-//            }                else{
-//               // latestQuip = ["I hear \(detected)", "I love you, oh master.", "Will you be my best friend?", "Walkies? Let's do walkies?"].randomElement() as! String
-//
-//                if thinking.count > 0
-//                {
-//                latestQuip = thinking.last!
-//                }
-//                if thinking.count > 1{
-//                    thinking.dropLast()
-//                }
-//            }
-            if confidence > 0.8{
+            if confidence > 0.5{
                 dog = true
             }
             
@@ -77,40 +63,12 @@ struct DetectSoundsView: View {
                     if let script = script[detected] {
                         thinking.append(script.randomElement()!)
                     }
-            
-                    //latestQuip = ""
+                    else{
+                        hearing.append(detected)
+                    }
                 }
-                
-//            if confidence > 0.8 && dogConfidence > 0.5{
-//                if let script = script[detected] {
-//                    latestQuip = script.randomElement()!
-//                }
-////                else{
-////                    latestQuip = ["I hear \(detected)", "I love you, oh master.", "Will you be my best friend?", "Walkies? Let's do walkies?"].randomElement() as! String
-////                }
-//            }
-//            else{
-//                if confidence > 0.5 {
-//                    if let script = script[detected] {
-//                        thinking.append(script.randomElement()!)
-//                    }
-//                    print( thinking)
-//                }
-////                    if dogConfidence > 0.5 {
-////                        latestQuip = thinking
-////                    }
-//                }
             }
         }
-//        return VStack(spacing: 0){
-//                                VStack{
-//                                    Text("")
-//                                    Text("")
-//                                    Text("")
-//                                    Text("")
-//                                    Text("")
-//                                }
-//       }
         
         return VStack(spacing: 0){
             VStack{
@@ -147,9 +105,6 @@ static func generateDetectionsGrid(_ detections: [(SoundIdentifier, DetectionSta
             ZStack {
                 VStack {
                     VideoComponent()
-                   //Text( latestQuip)
-                  //  Text("\(subtitle)").onReceive(checkWhatTheDogHasHeard){_ in print("checking in with fido")}
-                    //{ _  in subtitle = "I heard " + (thinking.last ?? "nothing")}
                     DetectSoundsView.generateDetectionsGrid(state.detectionStates)
                     Text(subtitle)
                 }.blur(radius: state.soundDetectionIsRunning ? 0.0 : 10.0)

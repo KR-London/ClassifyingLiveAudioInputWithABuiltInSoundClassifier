@@ -33,22 +33,50 @@ struct ContentView: View {
                     appState.restartDetection(config: appConfig)
                   })
             } else {
-//            appConfig.monitoredSounds =
-//                appConfig.inferenceWindowSize = 0.5
-//                appConfig.overlapFactor = 1
-//              a
-                
-                
-                
-           //     appConfig.monitoredSounds = SoundIdentifier.
-            
-                
                 DetectSoundsView(state: appState,
                                  config: $appConfig
-                ).onReceive(checkWhatTheDogHasHeard){_ in subtitle = (thinking.last ?? "Nothing")}
+                ).onReceive(checkWhatTheDogHasHeard){_ in if dog == true { subtitle = averageThinking() }else{ subtitle = "" } }
             }
         }
     }
+    
+    func averageThinking() -> String {
+        dog = false
+        
+        if let result = mostFrequent(array: thinking) {
+            thinking = [""]
+            print("\(result.value) thought \(result.count) times")
+            return result.value
+        }
+        
+        if let result = mostFrequent(array: hearing) {
+            hearing = [""]
+            print("\(result.value) heard \(result.count) times")
+            return result.value
+        }
+        
+        return ""
+    }
+    
+    func mostFrequent<T: Hashable>(array: [T]) -> (value: T, count: Int)? {
+        var nonEmptyArray = array
+//
+//        if array.count > 2 {
+//            nonEmptyArray = array.filter{($0 == "") == false }
+//        }
+//
+        nonEmptyArray = Array(array.dropFirst())
+        let counts = nonEmptyArray.reduce(into: [:]) { $0[$1, default: 0] += 1 }
+        
+        if let (value, count) = counts.max(by: { $0.1 < $1.1 }) {
+            return (value, count)
+        }
+        
+            // array was empty
+        return nil
+    }
+    
+   
     
     func getListOfSounds() throws -> [String]{
         let request = try SNClassifySoundRequest(classifierIdentifier: .version1)

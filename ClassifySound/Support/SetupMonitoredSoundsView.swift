@@ -108,19 +108,65 @@ struct SetupMonitoredSoundsView: View {
     ///
     /// - Returns: This view contains instructions for the setup page, and buttons for selecting sounds
     ///   and dismissing the view.
-    var headerContent: some View {
-        VStack {
-            VStack {
-                Button("Dog Translator ", action: { selectedSounds.formUnion(soundOptions)
+//    var headerContent: some View {
+//        VStack {
+//            VStack {
+//                Button("Dog Translator ", action: { selectedSounds.formUnion(soundOptions)
+//                    doneAction()
+//                }).padding()
+//                Button("Cat Translator ", action: { selectedSounds.formUnion(soundOptions)
+//                    doneAction()
+//                }).padding()
+//            }.padding()
+//
+//        }
+    //}
+    
+        var body: some View {
+            
+            VStack(alignment: HorizontalAlignment.center, spacing: 50){
+                Text("Sarcastic Pets")
+                    .frame(width: 300, height: 270, alignment: .center)
+                    .font(.custom("South Pacific", size: 80))
+                    .foregroundColor(Color.pink)
+                    .shadow(color: Color.pink
+                            , radius: 10, x: 7, y: 7)
+                
+                
+                Text("Pick a pet")
+                    .foregroundColor(Color.pink)
+                    .font(.system(size: 30, weight: .semibold, design: Font.Design.monospaced))
+                
+                Button(action: {
+                    selectedSounds.formUnion(soundOptions)
                     doneAction()
-                }).padding()
-                Button("Cat Translator ", action: { selectedSounds.formUnion(soundOptions)
+                }, label: {
+                    Image(uiImage: #imageLiteral(resourceName: "Dogs.png"))
+                        .resizable()
+                })
+                    .frame(width: 340, height: 166, alignment: .center)
+                    .foregroundColor(Color.pink)
+                    .cornerRadius(9)
+                    .shadow(color: .white, radius: 5, x: 5, y: 5)
+                Button(action: {
+                    selectedSounds.formUnion(soundOptions)
                     doneAction()
-                }).padding()
-            }.padding()
-
+                }, label: {
+                    Image(uiImage: #imageLiteral(resourceName: "Cats.png"))
+                        .resizable()
+                })
+                    .frame(width: 340, height: 166, alignment: .center)
+                    .foregroundColor(Color.pink)
+                    .cornerRadius(9)
+                    .shadow(color: .white, radius: 5, x: 5, y: 5)
+                
+                
+                
+            }     .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+                .background(Color.black)
+                .edgesIgnoringSafeArea(.all)
         }
-    }
+
 
     /// A view that displays a list of sounds the system detects.
     ///
@@ -139,28 +185,28 @@ struct SetupMonitoredSoundsView: View {
 //        }
   //  }
 
-    var body: some View {
-        ZStack {
-            VStack {
-                headerContent
-             //   soundOptionsList
-            }.blur(radius: querySoundsErrorMessage == nil ? 0.0 : 10.0)
-             .disabled(querySoundsErrorMessage != nil)
-
-            VStack {
-                Text("Error: failed to query recognized sounds").multilineTextAlignment(.center).padding()
-                Text(querySoundsErrorMessage ?? "").multilineTextAlignment(.center).padding()
-                Button("Retry",
-                       action: {
-                           do {
-                               soundOptions = try querySoundOptions()
-                               querySoundsErrorMessage = nil
-                           } catch {
-                               querySoundsErrorMessage = "\(error)"
-                           }
-                       })
-            }.opacity(querySoundsErrorMessage == nil ? 0.0 : 1.0)
-             .disabled(querySoundsErrorMessage == nil)
-        }
-    }
+//    var body: some View {
+//        ZStack {
+//            VStack {
+//                headerContent
+//             //   soundOptionsList
+//            }.blur(radius: querySoundsErrorMessage == nil ? 0.0 : 10.0)
+//             .disabled(querySoundsErrorMessage != nil)
+//
+//            VStack {
+//                Text("Error: failed to query recognized sounds").multilineTextAlignment(.center).padding()
+//                Text(querySoundsErrorMessage ?? "").multilineTextAlignment(.center).padding()
+//                Button("Retry",
+//                       action: {
+//                           do {
+//                               soundOptions = try querySoundOptions()
+//                               querySoundsErrorMessage = nil
+//                           } catch {
+//                               querySoundsErrorMessage = "\(error)"
+//                           }
+//                       })
+//            }.opacity(querySoundsErrorMessage == nil ? 0.0 : 1.0)
+//             .disabled(querySoundsErrorMessage == nil)
+//        }
+//    }
 }
