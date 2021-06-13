@@ -110,11 +110,6 @@ struct SetupMonitoredSoundsView: View {
     ///   and dismissing the view.
     var headerContent: some View {
         VStack {
-//            HStack {
-//                Spacer()
-//                Button("Done", action: doneAction).padding()
-//            }
-        //    Text("Select Labels to Detect").font(.title).frame(alignment: .leading)
             VStack {
                 Button("Dog Translator ", action: { selectedSounds.formUnion(soundOptions)
                     doneAction()
@@ -122,21 +117,8 @@ struct SetupMonitoredSoundsView: View {
                 Button("Cat Translator ", action: { selectedSounds.formUnion(soundOptions)
                     doneAction()
                 }).padding()
-                Button("Baby Translator ", action: { selectedSounds.formUnion(soundOptions)
-                    doneAction()
-                }).padding()
-            //    Button("Cat?", action: { selectedSounds.formUnion(soundOptions) }).padding()
-                //Button("Clear All", action: { selectedSounds.removeAll() }).padding()
             }.padding()
-//            HStack {
-//              //  Image(systemName: "magnifyingglass")
-//             //   TextField("Search", text: $soundSearchString)
-//                Button(action: { soundSearchString = "" }) {
-//                    Image(systemName: "x.circle.fill")
-//                      .foregroundColor(Color.gray)
-//                      .opacity(soundSearchString == "" ? 0.0 : 1.0)
-//                }
-//            }.padding()
+
         }
     }
 
