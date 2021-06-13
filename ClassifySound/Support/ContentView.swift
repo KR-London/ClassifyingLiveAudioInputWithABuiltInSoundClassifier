@@ -18,6 +18,9 @@ struct ContentView: View {
 
     /// The runtime state that contains information about the strength of the detected sounds.
     @StateObject var appState = AppState()
+    
+    var checkWhatTheDogHasHeard = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
+
 
     var body: some View {
         ZStack {
@@ -39,10 +42,11 @@ struct ContentView: View {
                 
            //     appConfig.monitoredSounds = SoundIdentifier.
             
+                
                 DetectSoundsView(state: appState,
                                  config: $appConfig
-                )
-    }
+                ).onReceive(checkWhatTheDogHasHeard){_ in subtitle = (thinking.last ?? "Nothing")}
+            }
         }
     }
     
