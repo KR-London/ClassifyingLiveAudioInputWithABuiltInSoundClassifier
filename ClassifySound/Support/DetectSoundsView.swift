@@ -85,40 +85,22 @@ static func generateDetectionsGrid(_ detections: [(SoundIdentifier, DetectionSta
                             //print($0.0.displayName)
                             
                             let confidence = $0.1.currentConfidence
-                            
-//                            if $0.0.displayName == "Dog" {
-//                                print("I hear Dog")
-//                            }
-
-                            //$0.0.displayName = .
-                            
                             if $0.1.currentConfidence > 0.5 {
                                
                                 generateMeter(detected: $0.0.displayName, confidence: $0.1.currentConfidence)
                                 
                         
                             }
-//                            else if $0.0.displayName == "Dog" || $0.0.displayName  == "Dog Bow Wow" || $0.0.displayName == "Dog Bark" || $0.0.displayName == "Dog Bow Wow" || $0.0.displayName == "Dog Growl"{
-//                                generateMeter(detected: $0.0.displayName, confidence: $0.1.currentConfidence)
-//                            }
                         }
                     }
                 }
             }
-    
-//    func loadImage() {
-//        guard let inputImage = inputImage else { return }
-//        image = Image(uiImage: inputImage)
-//    }
 
     var body: some View {
         NavigationView {
         VStack {
             ZStack {
                 VStack {
-                   // Text("Dog Translation In Progress").font(.title).padding()
-                  //  (image ?? Image("egg")).resizable()
-                       // .scaledToFit()
                     VideoComponent()
                     Text( latestQuip)
                     DetectSoundsView.generateDetectionsGrid(state.detectionStates)
@@ -126,13 +108,8 @@ static func generateDetectionsGrid(_ detections: [(SoundIdentifier, DetectionSta
                     .disabled(!state.soundDetectionIsRunning)
                 }
         }.padding([.horizontal, .bottom])
-            .navigationBarTitle("Dog Translator").sheet(isPresented: $showingImagePicker, onDismiss: loadImage) {
-                ImagePicker(image: self.$inputImage)
-        }
+            .navigationBarTitle("Dog Translator")
     }
-    
-  
-        
 }
     
     func loadImage() {
@@ -141,44 +118,6 @@ static func generateDetectionsGrid(_ detections: [(SoundIdentifier, DetectionSta
     }
 
 }
-
-
-//struct CaptureImageView: View {
-//    @Binding var isShown: Bool
-//    @Binding var image: Image?
-//    @Binding var newUIImage: UIImage?
-//
-//    func makeCoordinator() -> Coordinator {
-//        return Coordinator(isShown: $isShown, image: $newUIImage, showSaveButton: $showSaveButton)
-//    }
-//}
-//
-//extension CaptureImageView: UIViewControllerRepresentable {
-//
-//    func makeUIViewController(context: UIViewControllerRepresentableContext<CaptureImageView>) -> UIImagePickerController {
-//
-//        let vc = UIImagePickerController()
-//
-//        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.camera) {
-//            vc.sourceType = .camera
-//            vc.allowsEditing = true
-//         //   vc.delegate = context.coordinator
-//
-//            let screenSize: CGRect = UIScreen.main.bounds
-//            let screenWidth = screenSize.width
-//            let screenHeight = screenSize.height
-//
-//         //   vc.cameraOverlayView = CircleView(frame: CGRect(x: (screenWidth / 2) - 50, y: (screenWidth / 2) + 25, width: 100, height: 100))
-//
-//            return vc
-//        }
-//        return UIImagePickerController()
-//    }
-//
-//    func updateUIViewController(_ uiViewController: UIImagePickerController, context: UIViewControllerRepresentableContext<CaptureImageView>) {
-//    }
-//}
-
 
 struct VideoComponent: UIViewControllerRepresentable {
     

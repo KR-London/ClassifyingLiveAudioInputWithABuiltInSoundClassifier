@@ -32,7 +32,7 @@ struct ContentView: View {
                 DetectSoundsView(state: appState,
                                  config: $appConfig
                 )
-            }
+        }
         }
     }
 }
