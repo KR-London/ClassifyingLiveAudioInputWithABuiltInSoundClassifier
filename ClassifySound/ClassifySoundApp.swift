@@ -85,7 +85,7 @@ class AppState: ObservableObject {
                 })
 
         self.detectionStates =
-          [SoundIdentifier](config.monitoredSounds)
+          [SoundIdentifier]( config.monitoredSounds )
           .sorted(by: { $0.displayName < $1.displayName })
           .map { ($0, DetectionState(presenceThreshold: 0.5,
                                      absenceThreshold: 0.3,

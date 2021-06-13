@@ -29,10 +29,15 @@ struct ContentView: View {
                     appState.restartDetection(config: appConfig)
                   })
             } else {
+//            appConfig.monitoredSounds =
+//                appConfig.inferenceWindowSize = 0.5
+//                appConfig.overlapFactor = 1
+//
+            
                 DetectSoundsView(state: appState,
                                  config: $appConfig
                 )
-        }
+    }
         }
     }
 }
