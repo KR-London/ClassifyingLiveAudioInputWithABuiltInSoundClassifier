@@ -7,6 +7,7 @@
 
 import UIKit
 import AVFoundation
+import ViewAnimator
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -23,7 +24,26 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         super.viewDidLoad()
         view.backgroundColor = .clear
        askForPermissions()
-        view.layer.addSublayer(previewLayer)
+        
+        let spinnyView = UIView()
+        
+        spinnyView.layer.addSublayer(previewLayer)
+        
+        
+        view.addSubview(spinnyView)
+        
+        spinnyView.translatesAutoresizingMaskIntoConstraints = false
+        
+        spinnyView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        spinnyView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        spinnyView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        spinnyView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
+        let zoomAnimation = AnimationType.zoom(scale: 0.2)
+        let rotateAnimation = AnimationType.rotate(angle: CGFloat.pi/6)
+        UIView.animate(views: [spinnyView],
+                       animations: [zoomAnimation, rotateAnimation],
+                       duration: 0.5)
   }
     
     override func viewDidLayoutSubviews() {

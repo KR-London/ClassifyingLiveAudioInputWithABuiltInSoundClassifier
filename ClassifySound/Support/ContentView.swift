@@ -6,6 +6,7 @@ The top-level view for the app.
 */
 
 import SwiftUI
+import SoundAnalysis
 
 /// The main view that contains the app content.
 struct ContentView: View {
@@ -32,7 +33,11 @@ struct ContentView: View {
 //            appConfig.monitoredSounds =
 //                appConfig.inferenceWindowSize = 0.5
 //                appConfig.overlapFactor = 1
-//
+//              a
+                
+                
+                
+         //   appConfig.monitoredSounds = getListOfSounds()
             
                 DetectSoundsView(state: appState,
                                  config: $appConfig
@@ -40,7 +45,13 @@ struct ContentView: View {
     }
         }
     }
+    
+    func getListOfSounds() throws -> [String]{
+        let request = try SNClassifySoundRequest(classifierIdentifier: .version1)
+        return request.knownClassifications
+    }
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

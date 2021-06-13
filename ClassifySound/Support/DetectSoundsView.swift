@@ -52,13 +52,13 @@ struct DetectSoundsView: View {
             
             if detected != "Dog" && detected != "Dog Bark" && detected != "Dog Bow Wow"  && detected != "Dog Growl"{
             
-            if confidence > 0.9 && dogConfidence > 0.5{
+            if confidence > 0.5 && dogConfidence > 0.5{
                 if let script = script[detected] {
                     latestQuip = script
                 }
             }
             else{
-                if confidence > 0.9 {
+                if confidence > 0.5 {
                     if let script = script[detected] {
                         thinking = script
                     }
